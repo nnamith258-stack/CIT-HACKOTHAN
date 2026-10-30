@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1675b7" />
+  <meta name="description" content="Sign-in page for the ESP32 DeviceLink console." />
+  <title>Sign in | DeviceLink</title>
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="notifications.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card" aria-label="DeviceLink sign in">
+      <aside class="welcome-panel">
+        <a class="brand" href="index.html" aria-label="DeviceLink home">
+          <span class="brand-mark" aria-hidden="true">⌁</span>
+          <span>DEVICE<span class="brand-light">LINK</span></span>
+        </a>
+
+        <div class="welcome-content">
+          <p class="eyebrow">ESP32 DEVICE CONSOLE</p>
+          <h1>Welcome<br />back.</h1>
+          <p class="welcome-copy">A clearer view of your hardware, all in one place.</p>
+        </div>
+
+        <div class="welcome-decoration" aria-hidden="true">
+          <span class="orbit orbit-one"></span>
+          <span class="orbit orbit-two"></span>
+          <span class="orbit orbit-three"></span>
+          <span class="orbit orbit-dot"></span>
+        </div>
+
+        <p class="panel-caption"><span class="live-dot"></span> YOUR LOCAL DEVICE SPACE</p>
+      </aside>
+
+      <section class="form-panel">
+        <div class="form-inner">
+          <div class="mobile-brand">
+            <span class="brand-mark" aria-hidden="true">⌁</span>
+            <span>DEVICE<span class="brand-light">LINK</span></span>
+          </div>
+
+          <p class="form-eyebrow">YOUR DEVICE CONSOLE</p>
+          <h2>Sign in</h2>
+          <p class="form-intro">Enter your details to continue to your workspace.</p>
+
+          <form id="sign-in-form">
+            <label class="field-label" for="username">Username</label>
+            <div class="input-wrap">
+              <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.5"></circle>
+                <path d="M5 20c.5-3.5 3.2-5.5 7-5.5s6.5 2 7 5.5"></path>
+              </svg>
+              <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter your username" required />
+            </div>
+
+            <div class="password-label-row">
+              <label class="field-label" for="password">Password</label>
+            </div>
+            <div class="input-wrap">
+              <svg class="field-icon lock-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="5" y="10" width="14" height="11" rx="2"></rect>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+              </svg>
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+              <button class="password-toggle" id="password-toggle" type="button" aria-label="Show password" aria-pressed="false">SHOW</button>
+            </div>
+
+            <div class="form-options">
+              <label class="remember-option">
+                <input type="checkbox" name="remember" />
+                <span>Remember me</span>
+              </label>
+              <span class="help-text">Need help? Contact your administrator.</span>
+            </div>
+
+            <button class="sign-in-button" type="submit">Sign in <span aria-hidden="true">→</span></button>
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <div class="divider"><span>OR</span></div>
+          <a class="console-link" href="dashboard.html">Continue to device console <span aria-hidden="true">↗</span></a>
+          <p class="security-note">Sign-in is a visual preview and does not verify credentials.</p>
+        </div>
+      </section>
+    </section>
+    <footer class="page-footer"><span class="footer-lock" aria-hidden="true">●</span> PRIVATE LOCAL CONNECTION <span class="footer-divider">·</span> DEVICE LINK</footer>
+  </main>
+  <script src="notifications.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

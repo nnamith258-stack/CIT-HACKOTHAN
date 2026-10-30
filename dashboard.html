@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4f7fb" />
+  <meta name="description" content="Local irrigation and water tank dashboard." />
+  <title>Home dashboard | DeviceLink</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="notifications.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html" aria-label="DeviceLink dashboard">
+        <span class="brand-mark" aria-hidden="true">⌁</span>
+        <span>DEVICE<span class="brand-light">LINK</span></span>
+      </a>
+
+      <p class="nav-caption">WORKSPACE</p>
+      <nav class="side-nav" aria-label="Main navigation">
+        <a class="nav-link is-active" href="#home" aria-current="page"><span class="nav-icon">⌂</span> Home dashboard</a>
+        <a class="nav-link" href="#controls"><span class="nav-icon">◉</span> Irrigation controls</a>
+        <a class="nav-link" href="#settings"><span class="nav-icon">⚙</span> Settings</a>
+        <a class="nav-link" href="#activity"><span class="nav-icon">◷</span> Event history</a>
+      </nav>
+
+      <div class="sidebar-device">
+        <span class="sidebar-device-icon" aria-hidden="true">▦</span>
+        <div>
+          <strong>ESP32 controller</strong>
+          <span id="sidebar-device-status">Integration needed</span>
+        </div>
+        <span class="sidebar-status-dot" aria-hidden="true"></span>
+      </div>
+
+      <a class="sidebar-back" href="index.html">← <span>Sign-in preview</span></a>
+    </aside>
+
+    <main class="main-content" id="home">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <span class="brand-mark" aria-hidden="true">⌁</span>
+          <span>DEVICE<span class="brand-light">LINK</span></span>
+        </div>
+        <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-slash">/</span><strong>Home dashboard</strong></div>
+        <div class="topbar-right">
+          <span class="local-badge"><span></span> LOCAL DEVICE</span>
+          <label class="language-picker">
+            <span class="sr-only" id="language-label">Language</span>
+            <select id="language-select" aria-labelledby="language-label">
+              <option value="en">English</option>
+              <option value="kn">ಕನ್ನಡ</option>
+              <option value="hi">हिन्दी</option>
+            </select>
+          </label>
+          <button class="icon-button" id="refresh-dashboard" type="button" aria-label="Refresh device response" title="Refresh device response">↻</button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">IRRIGATION OVERVIEW</p>
+            <h1>Home dashboard</h1>
+            <p class="page-subtitle">Monitor your water system and controller at a glance.</p>
+          </div>
+          <div class="last-updated">
+            <span class="updated-label">LAST SUCCESSFUL DEVICE RESPONSE</span>
+            <time id="last-updated" datetime="">Not available</time>
+          </div>
+        </section>
+
+        <section class="integration-notice" aria-label="Integration status">
+          <span class="notice-icon" aria-hidden="true">i</span>
+          <div>
+            <strong>Preview mode — hardware telemetry and commands are not connected</strong>
+            <p>Recognized readings update from the existing ESP32 response every five seconds. Unrecognized or missing fields stay unavailable. Start/stop controls remain disabled because no command endpoints were provided.</p>
+          </div>
+          <a href="http://192.168.4.1/" target="_blank" rel="noopener noreferrer">Open device ↗</a>
+        </section>
+
+        <section class="metrics-grid" aria-label="Current system readings">
+          <article class="metric-card tank-metric">
+            <div class="metric-top">
+              <span class="metric-icon tank-icon" aria-hidden="true">▤</span>
+              <span class="metric-state state-muted" id="tank-badge">Awaiting data</span>
+            </div>
+            <p class="metric-label">TANK LEVEL</p>
+            <p class="metric-value"><span id="tank-level">—</span><small>%</small></p>
+            <p class="metric-note" id="tank-note">Waiting for sensor data</p>
+            <div class="meter-track"><span class="meter-fill" id="tank-meter"></span></div>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-top">
+              <span class="metric-icon soil-icon" aria-hidden="true">⌁</span>
+              <span class="metric-state state-muted" id="soil-badge">Awaiting data</span>
+            </div>
+            <p class="metric-label">SOIL STATE</p>
+            <p class="metric-value metric-word" id="soil-state">Unknown</p>
+            <p class="metric-note" id="soil-note">Waiting for sensor data</p>
+            <div class="metric-footer"><span class="mini-dot"></span> Sensor not mapped</div>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-top">
+              <span class="metric-icon rain-icon" aria-hidden="true">☂</span>
+              <span class="metric-state state-muted" id="rain-badge">Awaiting data</span>
+            </div>
+            <p class="metric-label">RAIN STATE</p>
+            <p class="metric-value metric-word" id="rain-state">Unknown</p>
+            <p class="metric-note" id="rain-note">Waiting for sensor data</p>
+            <div class="metric-footer"><span class="mini-dot"></span> Sensor not mapped</div>
+          </article>
+
+          <article class="metric-card controller-metric">
+            <div class="metric-top">
+              <span class="metric-icon controller-icon" aria-hidden="true">▦</span>
+              <span class="metric-state state-warn" id="controller-badge">Not verified</span>
+            </div>
+            <p class="metric-label">CONTROLLER STATUS</p>
+            <p class="metric-value metric-word" id="controller-state">Unknown</p>
+            <p class="metric-note" id="controller-note">Waiting for device response</p>
+            <div class="metric-footer"><span class="mini-dot warning-dot"></span> ESP32 · 192.168.4.1</div>
+          </article>
+        </section>
+
+        <section class="panel mode-panel" aria-labelledby="mode-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">CONTROL MODE</p>
+              <h2 id="mode-title">Automatic or manual</h2>
+            </div>
+            <span class="preview-tag">LOCAL PREVIEW ONLY</span>
+          </div>
+          <div class="mode-content">
+            <div class="mode-switch" role="group" aria-label="Preview mode selection">
+              <button class="mode-button" id="auto-mode" type="button" aria-pressed="false">◉ <span>Automatic</span></button>
+              <button class="mode-button" id="manual-mode" type="button" aria-pressed="false">☷ <span>Manual</span></button>
+            </div>
+            <p class="mode-explanation" id="mode-explanation">Controller mode: unknown. Choose a preview mode; this will not change the ESP32.</p>
+          </div>
+        </section>
+
+        <section class="controls-grid" id="controls" aria-label="Irrigation and refill controls">
+          <article class="panel control-card">
+            <div class="panel-heading">
+              <div class="control-title">
+                <span class="control-icon irrigation-icon" aria-hidden="true">⌁</span>
+                <div>
+                  <p class="eyebrow">WATERING</p>
+                  <h2>Irrigation</h2>
+                </div>
+              </div>
+              <span class="control-state" id="irrigation-status"><span class="state-indicator"></span> Status unavailable</span>
+            </div>
+            <p class="control-description">Start or stop the irrigation pump.</p>
+            <div class="control-actions">
+              <button class="action-button action-start" type="button" disabled title="Connect an ESP32 command endpoint first">Start irrigation</button>
+              <button class="action-button action-stop" type="button" disabled title="Connect an ESP32 command endpoint first">Stop irrigation</button>
+            </div>
+            <p class="acknowledgement" id="irrigation-ack" role="status"><span>○</span> Command acknowledgement unavailable</p>
+          </article>
+
+          <article class="panel control-card">
+            <div class="panel-heading">
+              <div class="control-title">
+                <span class="control-icon refill-icon" aria-hidden="true">↥</span>
+                <div>
+                  <p class="eyebrow">WATER SUPPLY</p>
+                  <h2>Tank refill</h2>
+                </div>
+              </div>
+              <span class="control-state" id="refill-status"><span class="state-indicator"></span> Status unavailable</span>
+            </div>
+            <p class="control-description">Start or stop the tank refill process.</p>
+            <div class="control-actions">
+              <button class="action-button action-start" type="button" disabled title="Connect an ESP32 command endpoint first">Start refill</button>
+              <button class="action-button action-stop" type="button" disabled title="Connect an ESP32 command endpoint first">Stop refill</button>
+            </div>
+            <p class="acknowledgement" id="refill-ack" role="status"><span>○</span> Command acknowledgement unavailable</p>
+          </article>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel settings-panel" id="settings">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">LOCAL PREFERENCES</p>
+                <h2>Thresholds &amp; run time</h2>
+              </div>
+              <span class="preview-tag">NOT SENT TO DEVICE</span>
+            </div>
+            <form id="settings-form" class="settings-form">
+              <label class="setting-field">
+                <span>Water when soil moisture is below</span>
+                <span class="setting-input"><input id="soil-threshold" name="soilThreshold" type="number" min="0" max="100" step="1" value="35" /><span>%</span></span>
+              </label>
+              <label class="setting-field">
+                <span>Refill when tank level is below</span>
+                <span class="setting-input"><input id="tank-threshold" name="tankThreshold" type="number" min="0" max="100" step="1" value="25" /><span>%</span></span>
+              </label>
+              <label class="setting-field">
+                <span>Irrigation run time</span>
+                <span class="setting-input"><input id="run-time" name="runTime" type="number" min="1" max="240" step="1" value="10" /><span>min</span></span>
+              </label>
+              <div class="settings-footer">
+                <p id="settings-saved">Settings stay in this browser only.</p>
+                <button class="save-button" type="submit">Save settings</button>
+              </div>
+            </form>
+          </article>
+
+          <div class="side-panels">
+            <article class="panel faults-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">SYSTEM HEALTH</p>
+                  <h2>Fault alerts</h2>
+                </div>
+                <span class="alert-count" id="fault-count">—</span>
+              </div>
+              <div class="fault-empty">
+                <span class="fault-icon" id="fault-icon" aria-hidden="true">!</span>
+                <div><strong id="fault-title">Fault state unavailable</strong><p id="fault-detail">Waiting for device fault data.</p></div>
+              </div>
+            </article>
+
+            <article class="panel history-panel" id="activity">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">THIS BROWSER</p>
+                  <h2>Recent events</h2>
+                </div>
+                <button class="text-button" id="clear-events" type="button">Clear</button>
+              </div>
+              <ol class="event-list" id="event-list" aria-live="polite">
+                <li class="event-empty">No local events yet.</li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel records-panel" aria-labelledby="records-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">LOCAL SQLITE DATABASE</p>
+              <h2 id="records-title">Recent device records</h2>
+            </div>
+            <button class="text-button" id="refresh-records" type="button">Refresh records</button>
+          </div>
+          <p class="records-help">Successful five-second device checks are stored locally with their response and timestamp. The latest readings are shown here; fields not present in the device JSON remain unavailable.</p>
+          <div class="records-list" id="sensor-records" aria-live="polite">
+            <p class="records-empty">Loading saved records…</p>
+          </div>
+        </section>
+
+        <footer class="dashboard-footer">
+            <span>DEVICE LINK</span><span>·</span><span>FIVE-SECOND REFRESH · NO HARDWARE COMMANDS SENT</span>
+        </footer>
+      </div>
+    </main>
+  </div>
+  <script src="notifications.js"></script>
+  <script src="localization.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

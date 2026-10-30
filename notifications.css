@@ -1,0 +1,133 @@
+.notification-region {
+  position: fixed;
+  z-index: 10;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  width: min(390px, calc(100vw - 32px));
+  gap: 10px;
+  pointer-events: none;
+}
+
+.notification {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 11px;
+  min-height: 66px;
+  padding: 12px 13px;
+  border: 1px solid rgba(207, 220, 235, 0.18);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(13, 35, 57, 0.2);
+  color: #233448;
+  pointer-events: auto;
+  animation: notification-enter 180ms ease-out both;
+}
+
+.notification.is-leaving {
+  animation: notification-leave 160ms ease-in both;
+}
+
+.notification-icon {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e9f2fb;
+  color: #276caa;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.notification.is-success .notification-icon {
+  background: #e5f7ef;
+  color: #188154;
+}
+
+.notification.is-warning .notification-icon {
+  background: #fff3dc;
+  color: #a46108;
+}
+
+.notification.is-error .notification-icon {
+  background: #ffebeb;
+  color: #bb3c3c;
+}
+
+.notification-content {
+  min-width: 0;
+}
+
+.notification-title {
+  display: block;
+  margin-bottom: 2px;
+  color: #24364a;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.notification-message {
+  display: block;
+  color: #68788a;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.notification-close {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #738295;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.notification-close:hover {
+  background: #f0f3f6;
+  color: #26394d;
+}
+
+.notification-close:focus-visible {
+  outline: 2px solid #3888c1;
+  outline-offset: 1px;
+}
+
+@keyframes notification-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes notification-leave {
+  to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
+@media (max-width: 560px) {
+  .notification-region {
+    top: 12px;
+    right: 12px;
+    width: calc(100vw - 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification, .notification.is-leaving {
+    animation-duration: 0.01ms;
+  }
+}
